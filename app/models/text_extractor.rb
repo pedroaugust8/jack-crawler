@@ -16,20 +16,21 @@ class TextExtractor
 
 	def scan(site)
 		mechanize = Mechanize.new
+		mechanize.html_parser = CharsetParser
 		@page = mechanize.get(site)
   	end
 
   	def search
-  		@page.search('div').each do |div|
-			content_div = div.text.strip
-			content_div = content_div.gsub(/\s+/m, ' ').split(" ")
-			mail_list_uniq = content_div.uniq
-
-			content_div.each do |content|
-	    		write_file(@maillist_file,content) if is_email(content) != ''
-	    		#write_file(@sites_file,content) if is_site_url(content)	    		
-  			end
-  		end
+  		unless @page.nil? then
+  			@page.search('div').each do |div|
+				content_div = div.text.strip
+				content_div = content_div.gsub(/\s+/m, ' ').split(" ")
+				content_div.each do |content|
+		    		write_file(@maillist_file,content) if is_email(content) != ''
+		    		#write_file(@sites_file,content) if is_site_url(content)	    		
+	  			end 
+	  		end
+	  	end
   		
   	end
 
@@ -77,4 +78,11 @@ class TextExtractor
   	def write_new_file(filename,content)
   		File.open(filename, 'w') { |file| file.write(content) }
   	end
+end
+
+class CharsetParser
+  def self.parse(thing, url = nil, encoding = nil, options = Nokogiri::XML::ParseOptions::DEFAULT_HTML, &block)
+    thing = NKF.nkf("-wm0X", thing).sub(/Shift_JIS/,"utf-8") 
+    Nokogiri::HTML::Document.parse(thing, url, encoding, options, &block)
+  end
 end
