@@ -1,0 +1,2 @@
+module TextExtractorHelper
+end

@@ -1,0 +1,8 @@
+<h1>TextExtractor - Sites</h1>
+
+<%= form_tag("/text_extractor/update", method: "post") do %>
+	<%= text_area_tag(:sites,@list) %>
+  	<%= submit_tag %>
+<% end %>
+
+<p><%= link_to "Lista de e-mails", :controller=> 'text_extractor', :action => "list" %></p>
