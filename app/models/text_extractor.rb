@@ -1,3 +1,5 @@
+
+
 class TextExtractor
 
 	def initialize 
